@@ -3,6 +3,7 @@ from selenium import webdriver
 from datetime import datetime
 import sqlite3
 import requests
+from win11toast import toast as show_notify
 
 useragent = "Mozilla/5.0(Windows NT10.0; Win64; x64) AppleWebKit/537.36(HTML,like Gecko) Chrome/109.0.0.0 " \
             "Safari/537.36 OPR/95.0.0.0(Edition Yx 05)"
@@ -94,22 +95,24 @@ def insert_info_db(prices_dict: dict):
         last_data_dict[item[0]] = item[1]
 
     with sqlite3.connect(DATABASE_PATH) as connect:
+        notify = ''
         for prod_name, new_price in prices_dict.items():
             if last_data_dict == {}:
                 old_price = 0
             else:
                 old_price = last_data_dict[prod_name]
-
             if new_price != old_price:
                 cursor = connect.cursor()
                 param = (prod_name, new_price, time)
                 query = "INSERT INTO product_price ('name', 'price', 'date') VALUES (?, ?, ?)"
                 cursor.execute(query, param)
                 if new_price > old_price:
-                    print(f'УВЕЛИЧЕНИЕ ЦЕН!!! Теперь "{prod_name}" стоит {new_price} руб.((( '
-                          f'(это дороже на {new_price} руб.)')
+                    notify += f'{new_price} р. "{prod_name}" - цена УВЕЛИЧИЛАСЬ, ' \
+                              f'(стало дороже на {new_price - old_price} руб.)\n'
                 elif new_price < old_price:
-                    print(f'СНИЖЕНИЕ цен!!! Теперь "{prod_name}" стоит {new_price} руб!!! '
-                          f'(это дешевле на {old_price - new_price} руб.)')
+                    notify += f'{new_price} р. "{prod_name}" - цена СНИЗИЛАСЬ, ' \
+                              f'(стало дешевле на {old_price - new_price} руб.)\n'
             else:
-                print(f'... стоимость "{prod_name}" неизменна, и = {new_price} руб.')
+                notify += f'{new_price}р. "{prod_name}" - старая цена.\n'
+
+        show_notify(notify, duration='long')
