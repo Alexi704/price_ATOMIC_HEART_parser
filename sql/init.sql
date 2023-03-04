@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS product_price (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name NVARCHAR(255) NOT NULL,
+    price INTEGER,
+    date TEXT
+);
