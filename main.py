@@ -11,7 +11,7 @@ if __name__ == '__main__':
         print('... нет интернета ... ждем немного ... ')
         sleep(5)
     print('... начат сбор информации на ATOMIC HEART ...')
-    # show_notify('... начат сбор информации на ATOMIC HEART ...', duration='short')
+    show_notify('... начат сбор информации на ATOMIC HEART ...', duration='short')
     prices = get_content(donor_url)
     insert_info_db(prices)
     print('... сбор закончен ...')
