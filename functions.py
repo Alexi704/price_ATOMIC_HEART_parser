@@ -94,8 +94,8 @@ def insert_info_db(prices_dict: dict):
     for item in last_data:
         last_data_dict[item[0]] = item[1]
 
+    notify = ''
     with sqlite3.connect(DATABASE_PATH) as connect:
-        notify = ''
         for prod_name, new_price in prices_dict.items():
             if last_data_dict == {}:
                 old_price = 0
@@ -115,4 +115,5 @@ def insert_info_db(prices_dict: dict):
             else:
                 notify += f'{new_price}р. "{prod_name}" - старая цена.\n'
 
+        print(notify)
         show_notify(notify, duration='long')
