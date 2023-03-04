@@ -1,6 +1,6 @@
 import sqlite3
 from os.path import isfile, join
-from main import DATABASE_PATH
+from functions import DATABASE_PATH
 
 INIT_GRATE_FILE_PATH = 'init.sql'
 
