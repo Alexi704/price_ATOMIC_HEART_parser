@@ -56,8 +56,8 @@ def now_time():
     return datetime.now().strftime("%d-%m-%Y %H:%M")
 
 
-def get_last_info_from_db():
-    """Получаем последние записи из БД"""
+def get_last_price_from_db():
+    """Получаем последние цены на продукцию из БД"""
     with sqlite3.connect(DATABASE_PATH) as connect:
         cursor = connect.cursor()
         query = "SELECT name, price, MAX(date) FROM product_price GROUP BY name"
@@ -65,11 +65,29 @@ def get_last_info_from_db():
         return cursor.fetchall()
 
 
+def get_last_time_access_site():
+    """Получаем время последнего обращения к сайту (в формате datatime)"""
+    # пока эта функция не пригодилась)
+    with sqlite3.connect(DATABASE_PATH) as connect:
+        cursor = connect.cursor()
+        query = "SELECT MAX(date) FROM time_access_site"
+        cursor.execute(query)
+        date = cursor.fetchone()[0]
+        return datetime.strptime(date, '%d-%m-%Y %H:%M')
+
+
 def insert_info_db(prices_dict: dict):
     """В случае изменения цен, вставляем данные с новыми ценами в БД"""
     time = now_time()
+    # вставляем время последнего обращения в табличку БД 'time_access_site'
+    with sqlite3.connect(DATABASE_PATH) as connect:
+        cursor = connect.cursor()
+        param = (time,)
+        query = "INSERT INTO time_access_site ('date') VALUES (?)"
+        cursor.execute(query, param)
 
-    last_data = get_last_info_from_db()
+    # выбираем из БД последние цены на продукцию
+    last_data = get_last_price_from_db()
 
     last_data_dict = {}
     for item in last_data:

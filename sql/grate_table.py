@@ -26,5 +26,14 @@ def create_table():
         cursor.executescript(query)
 
 
+def create_table_time_parser():
+    """Создаем таблицу учета времени обращений к сайту"""
+    with sqlite3.connect(join('../', DATABASE_PATH)) as connection:
+        cursor = connection.cursor()
+        query = "CREATE TABLE IF NOT EXISTS time_access_site (id INTEGER PRIMARY KEY AUTOINCREMENT, 'date' TEXT)"
+        cursor.executescript(query)
+
+
 if __name__ == '__main__':
     create_table()
+    create_table_time_parser()
