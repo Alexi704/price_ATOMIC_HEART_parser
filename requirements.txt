@@ -37,3 +37,4 @@ winsdk==1.0.0b7
 wsproto==1.2.0
 zope.event==4.6
 zope.interface==5.5.2
+schedule~=1.1.0
