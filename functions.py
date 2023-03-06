@@ -1,9 +1,11 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from datetime import datetime
 import sqlite3
 import requests
 from win11toast import toast as show_notify
+from datetime import datetime, timedelta, time
+from time import sleep
+
 
 useragent = "Mozilla/5.0(Windows NT10.0; Win64; x64) AppleWebKit/537.36(HTML,like Gecko) Chrome/109.0.0.0 " \
             "Safari/537.36 OPR/95.0.0.0(Edition Yx 05)"
@@ -120,3 +122,30 @@ def insert_info_db(prices_dict: dict):
 
         print(notify)
         show_notify(notify, duration='long')
+
+
+def time_start_program():
+    # получаем время последнего обращения к сайту по МСК
+    last_access_site = get_last_time_access_site() - timedelta(hours=4)
+    # истечение суток когда обращались к сайту последний раз
+    end_of_day_last_access = datetime.combine(last_access_site, time(23, 59, 59)) + timedelta(seconds=1)
+    # получаем текущее время по МСК
+    now_time = datetime.now() - timedelta(hours=4)
+    print(last_access_site, 'время последнего обращения к сайту')
+    print(end_of_day_last_access, 'время следующего запроса')
+
+    if now_time > end_of_day_last_access:
+        # print('время запустить программу')
+        return True
+    else:
+        # узнаем время ожидания
+        time_wait = end_of_day_last_access - now_time
+        return time_wait
+
+def timer_wait(_TIME):
+    m, s = divmod(_TIME, 60)
+    h, m = divmod(m, 60)
+    print(f"\rДо следующего парсинга: {int(h)}".rjust(3, '0'), f"{int(m)}".rjust(2, '0'),
+          f"{s}".rjust(2, '0'), sep=':', end='')
+    _TIME -= 1
+    sleep(1)
