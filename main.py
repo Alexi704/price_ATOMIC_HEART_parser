@@ -2,6 +2,7 @@ from time import sleep
 from functions import check_internet, get_content, insert_info_db, show_notify, get_last_time_access_site, \
     time_start_program, timer_wait
 
+
 check_url = 'https://www.google.com/'
 donor_url = 'https://atomicheart.vkplay.ru/'
 
