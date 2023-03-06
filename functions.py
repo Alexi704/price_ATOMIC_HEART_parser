@@ -68,13 +68,16 @@ def get_last_price_from_db():
 
 def get_last_time_access_site():
     """Получаем время последнего обращения к сайту (в формате datatime)"""
-    # пока эта функция не пригодилась)
+
     with sqlite3.connect(DATABASE_PATH) as connect:
         cursor = connect.cursor()
         query = "SELECT MAX(date) FROM time_access_site"
         cursor.execute(query)
         date = cursor.fetchone()[0]
-        return datetime.strptime(date, '%d-%m-%Y %H:%M')
+        if date is not None:
+            # date = cursor.fetchone()[0]
+            return datetime.strptime(date, '%d-%m-%Y %H:%M')
+        return datetime(1977, 1, 25, 23, 10)
 
 
 def insert_info_db(prices_dict: dict):

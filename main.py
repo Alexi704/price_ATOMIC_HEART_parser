@@ -24,13 +24,13 @@ def time_start_program():
     # получаем время последнего обращения к сайту по МСК
     last_access_site = get_last_time_access_site() - timedelta(hours=4)
     # истечение суток когда обращались к сайту последний раз
-    end_of_day_last_access = datetime.combine(last_access_site, time(23, 59, 59))
+    end_of_day_last_access = datetime.combine(last_access_site, time(23, 59, 59)) + timedelta(seconds=1)
     # получаем текущее время по МСК
     now_time = datetime.now() - timedelta(hours=4)
-    # print(last_access_site, 'время последнего обращения к сайту')
-    # print(end_of_day_last_access, 'время окончания постановки на паузу')
+    print(last_access_site, 'время последнего обращения к сайту')
+    print(end_of_day_last_access, 'время следующего запроса')
 
-    if now_time.day > end_of_day_last_access.day:
+    if now_time > end_of_day_last_access:
         # print('время запустить программу')
         return True
     else:
