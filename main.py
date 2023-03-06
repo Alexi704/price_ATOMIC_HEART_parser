@@ -1,6 +1,8 @@
 from time import sleep
+
+
 from functions import check_internet, get_content, insert_info_db, show_notify, get_last_time_access_site
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 
 check_url = 'https://www.google.com/'
@@ -19,22 +21,21 @@ def main():
 
 
 def time_start_program():
-    # получаем время последнего обращения к сайту
-    last_access_site = get_last_time_access_site()
-    # узнаем когда нужно запускать скрипт в следующий раз (через сутки)
-    time_next_start = last_access_site + timedelta(days=1)
-    # получаем текущее время
-    now_time = datetime.now()
+    # получаем время последнего обращения к сайту по МСК
+    last_access_site = get_last_time_access_site() - timedelta(hours=4)
+    # истечение суток когда обращались к сайту последний раз
+    end_of_day_last_access = datetime.combine(last_access_site, time(23, 59, 59))
+    # получаем текущее время по МСК
+    now_time = datetime.now() - timedelta(hours=4)
+    # print(last_access_site, 'время последнего обращения к сайту')
+    # print(end_of_day_last_access, 'время окончания постановки на паузу')
 
-    if now_time > time_next_start:
+    if now_time.day > end_of_day_last_access.day:
         # print('время запустить программу')
         return True
     else:
         # узнаем время ожидания
-        time_wait = time_next_start - now_time
-        # вычисляем время ожидания в секундах
-        how_sec = time_wait.total_seconds()
-        # встаем на паузу
+        time_wait = end_of_day_last_access - now_time
         return time_wait
 
 
@@ -49,7 +50,7 @@ if __name__ == '__main__':
             while _TIME > 0:
                 m, s = divmod(_TIME, 60)
                 h, m = divmod(m, 60)
-                print(f"\rДо следующего парсинга осталось: {int(h)}".rjust(3, '0'), f"{int(m)}".rjust(2, '0'),
+                print(f"\rДо следующего парсинга: {int(h)}".rjust(3, '0'), f"{int(m)}".rjust(2, '0'),
                       f"{s}".rjust(2, '0'), sep=':', end='')
                 _TIME -= 1
                 sleep(1)
