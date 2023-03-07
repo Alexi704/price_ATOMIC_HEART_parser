@@ -27,4 +27,9 @@ if __name__ == '__main__':
             # запускаем таймер обратного отсчета в терминале
             _TIME = start_info.seconds
             while _TIME > 0:
-                timer_wait(_TIME)
+                m, s = divmod(_TIME, 60)
+                h, m = divmod(m, 60)
+                print(f"\rДо следующего парсинга:{int(h)}".rjust(3, '0'), f"{int(m)}".rjust(2, '0'),
+                      f"{s}".rjust(2, '0'), sep=':', end='')
+                _TIME -= 1
+                sleep(1)

@@ -142,10 +142,12 @@ def time_start_program():
         time_wait = end_of_day_last_access - now_time
         return time_wait
 
-def timer_wait(_TIME):
-    m, s = divmod(_TIME, 60)
+
+def timer_wait(time_sec):
+    # не работает таймер если данный код вынесен в функцию
+    m, s = divmod(time_sec, 60)
     h, m = divmod(m, 60)
     print(f"\rДо следующего парсинга: {int(h)}".rjust(3, '0'), f"{int(m)}".rjust(2, '0'),
           f"{s}".rjust(2, '0'), sep=':', end='')
-    _TIME -= 1
+    time_sec -= 1
     sleep(1)
