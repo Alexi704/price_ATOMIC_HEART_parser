@@ -24,10 +24,15 @@ if __name__ == '__main__':
         else:
             # запускаем таймер обратного отсчета в терминале
             _TIME = start_info.seconds
+            m, s = divmod(_TIME, 60)
+            h, m = divmod(m, 60)
+            info_time_left = f'До следующего парсинга: {str(int(h)).rjust(2, "0")}:{str(int(m)).rjust(2, "0")}:' \
+                    f'{str(int(s)).rjust(2, "0")}'
+            show_notify(info_time_left, duration='short')
             while _TIME > 0:
                 m, s = divmod(_TIME, 60)
                 h, m = divmod(m, 60)
-                print(f"\rДо следующего парсинга:{int(h)}".rjust(3, '0'), f"{int(m)}".rjust(2, '0'),
+                print(f"\rДо следующего парсинга: {int(h)}".rjust(3, '0'), f"{int(m)}".rjust(2, '0'),
                       f"{s}".rjust(2, '0'), sep=':', end='')
                 _TIME -= 1
                 sleep(1)

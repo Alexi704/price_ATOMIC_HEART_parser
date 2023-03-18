@@ -1,6 +1,6 @@
 from time import sleep
 
-_TIME = 20  # Just for example, remove this
+_TIME = 10  # Just for example, remove this
 
 while _TIME > 0:
     m, s = divmod(_TIME, 60)
@@ -10,4 +10,5 @@ while _TIME > 0:
     _TIME -= 1
     sleep(1)
 else:
-    print("\r  Completed !  ")
+    print("\r  Completed !!!                                                ")
+    sleep(5)
