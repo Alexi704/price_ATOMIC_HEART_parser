@@ -36,6 +36,8 @@ def get_content(url):
     options.add_argument(f"user-agent={useragent}")  # задаем User Agent
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument('--headless')  # запускаем вебдрайвер в фоновом режиме !!!
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-notifications")
 
     with webdriver.Chrome(options=options) as browser:
         browser.get(url)
@@ -73,13 +75,15 @@ def get_last_time_access_site():
 
     with sqlite3.connect(DATABASE_PATH) as connect:
         cursor = connect.cursor()
-        query = "SELECT MAX(date) FROM time_access_site"
+        query = "SELECT date FROM time_access_site"
         cursor.execute(query)
-        date = cursor.fetchone()[0]
-        if date is not None:
-            # date = cursor.fetchone()[0]
-            return datetime.strptime(date, '%d-%m-%Y %H:%M')
-        return datetime(1977, 1, 25, 23, 10)
+        dates = cursor.fetchall()
+        max_date_access = datetime(1977, 1, 25, 23, 10)
+        for date in dates:
+            date = datetime.strptime(date[0], '%d-%m-%Y %H:%M')
+            if date > max_date_access:
+                max_date_access = date
+        return max_date_access
 
 
 def insert_info_db(prices_dict: dict):
@@ -131,11 +135,12 @@ def time_start_program():
     end_of_day_last_access = datetime.combine(last_access_site, time(23, 59, 59)) + timedelta(seconds=1)
     # получаем текущее время по МСК
     now_time = datetime.now() - timedelta(hours=4)
-    print(last_access_site, 'время последнего обращения к сайту')
-    print(end_of_day_last_access, 'время следующего запроса')
+    # print(now_time, 'текущее время')
+    # print(last_access_site, 'время последнего обращения к сайту')
+    # print(end_of_day_last_access, 'время следующего запроса')
 
     if now_time > end_of_day_last_access:
-        # print('время запустить программу')
+        print('время запустить программу')
         return True
     else:
         # узнаем время ожидания
