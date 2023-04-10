@@ -5,7 +5,16 @@ import requests
 from win11toast import toast as show_notify
 from datetime import datetime, timedelta, time
 from time import sleep
+import os
+from notifiers import get_notifier
+from dotenv import load_dotenv
 
+
+load_dotenv() # take environment variables from .env.
+
+telegram_token = os.getenv('TOKEN_TELEGRAM_BOT')
+telegram_chatID = os.getenv('TELEGRAM_CHAT_ID')
+telegram = get_notifier('telegram')
 
 useragent = "Mozilla/5.0(Windows NT10.0; Win64; x64) AppleWebKit/537.36(HTML,like Gecko) Chrome/109.0.0.0 " \
             "Safari/537.36 OPR/95.0.0.0(Edition Yx 05)"
@@ -125,6 +134,7 @@ def insert_info_db(prices_dict: dict):
                 notify += f'{new_price}р. "{prod_name}" - старая цена.\n'
 
         print(notify)
+        telegram.notify(token=telegram_token, chat_id=telegram_chatID, message=f'{time}\n\n{notify}')
         show_notify(notify, duration='long')
 
 

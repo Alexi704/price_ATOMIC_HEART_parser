@@ -1,8 +1,19 @@
 from time import sleep
 from functions import check_internet, get_content, insert_info_db, show_notify, time_start_program
+import os
+from notifiers import get_notifier
+from dotenv import load_dotenv
+
+
+load_dotenv() # take environment variables from .env.
+
+telegram_token = os.getenv('TOKEN_TELEGRAM_BOT')
+telegram_chatID = os.getenv('TELEGRAM_CHAT_ID')
+telegram = get_notifier('telegram')
 
 check_url = 'https://www.google.com/'
 donor_url = 'https://atomicheart.vkplay.ru/'
+
 
 
 def main():
@@ -10,7 +21,6 @@ def main():
         print('... нет интернета ... ждем немного ... ')
         sleep(5)
     print('... начат сбор информации на ATOMIC HEART ...')
-    show_notify('... начат сбор информации на ATOMIC HEART ...', duration='short')
     prices = get_content(donor_url)
     insert_info_db(prices)
     print('... сбор закончен ...')
@@ -19,7 +29,6 @@ def main():
 if __name__ == '__main__':
     while True:
         start_info = time_start_program()
-        print(start_info, 'это старт инфо')
         if start_info is True:
             main()
         else:
